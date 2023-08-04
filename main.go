@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"net/http"
+	"sort"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/gojp/kana"
@@ -17,9 +18,10 @@ import (
 )
 
 const (
-	defaultURL         = "https://www.jst.go.jp"
+	defaultURL         = "https://www.yomiuri.co.jp"
 	defaultSearchDepth = 1
-	maxSearchDepth     = 3
+	maxSearchDepth     = 10
+	defaultRankingSize = 100
 )
 
 type scraperOptions struct {
@@ -39,27 +41,85 @@ type kanjiKanaFrequencyCounter struct {
 	kanjis              map[string]int
 	hiraganas           map[string]int
 	katakanas           map[string]int
-	lock                *sync.Mutex
 }
 
 func main() {
 
-	// "https://kanjikana.com/en/kanji/jlpt/n5"
-
 	var (
 		url         string
 		searchDepth int
+		rankingSize int
 	)
 
 	flag.StringVar(&url, "url", defaultURL, "target website")
 	flag.IntVar(&searchDepth, "depth", defaultSearchDepth, "search depth")
+	flag.IntVar(&rankingSize, "ranksize", defaultRankingSize, "ranking size")
 	flag.Parse()
 
+	startExecTime := time.Now()
 	res, err := newKanjiKanaScraper(url, WithSearchDepth(searchDepth), WithLogging())
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(res)
+
+	mostCommomKanjis := getMostCommonCharactersList(res.kanjis)
+	mostCommomKatakana := getMostCommonCharactersList(res.katakanas)
+	mostCommomHiragana := getMostCommonCharactersList(res.hiraganas)
+
+	fmt.Println("All Japonese characters found:", res.allCharacteresCount)
+	fmt.Println("Kanji unique count:", res.kanjiUniqueCount)
+
+	if res.kanjiUniqueCount > 0 {
+		fmt.Println(rankingSize, "most common Kanji characters:")
+		printCharactersRanking(res.kanjis, mostCommomKanjis, rankingSize)
+	}
+
+	fmt.Println("Kana unique count:", res.kanaUniqueCount)
+	fmt.Println("Katakana unique count:", res.katakanaUniqueCount)
+	fmt.Println("Hiragana unique count:", res.hiraganaUniqueCount)
+
+	if res.katakanaUniqueCount > 0 {
+		fmt.Println(rankingSize, "most common Katakana characters:")
+		printCharactersRanking(res.katakanas, mostCommomKatakana, rankingSize)
+	}
+
+	if res.hiraganaUniqueCount > 0 {
+		fmt.Println(rankingSize, "most common Hiragana characters:")
+		printCharactersRanking(res.hiraganas, mostCommomHiragana, rankingSize)
+	}
+
+	log.Printf("total time: %v\n", time.Since(startExecTime))
+}
+
+func printCharactersRanking(m map[string]int, rankingList []string, rankingSize int) {
+	minRankingSize := rankingSize
+	if len(rankingList) < minRankingSize {
+		minRankingSize = len(rankingList)
+	}
+	cols := int(math.Sqrt(float64(minRankingSize)))
+
+	for i := 0; i < minRankingSize; i++ {
+		if i > 0 && i%cols == 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%4d. %v (%v)\t", i+1, rankingList[i], m[rankingList[i]])
+	}
+	fmt.Println()
+}
+
+func getMostCommonCharactersList(m map[string]int) []string {
+	var i int
+	charactersList := make([]string, len(m))
+	for k := range m {
+		charactersList[i] = k
+		i += 1
+	}
+
+	sort.SliceStable(charactersList, func(i, j int) bool {
+		return m[charactersList[i]] > m[charactersList[j]]
+	})
+
+	return charactersList
 }
 
 func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, layer int) {
@@ -180,12 +240,12 @@ func newKanjiKanaScraper(rootURL string, options ...Option) (*kanjiKanaFrequency
 	frequencyCounter.hiraganaUniqueCount = len(frequencyCounter.hiraganas)
 
 	kanas := make(map[string]struct{})
-	for k := range frequencyCounter.katakanas {
-		kanas[k] = struct{}{}
+	for c := range frequencyCounter.katakanas {
+		kanas[c] = struct{}{}
 	}
 
-	for k := range frequencyCounter.hiraganas {
-		kanas[k] = struct{}{}
+	for c := range frequencyCounter.hiraganas {
+		kanas[c] = struct{}{}
 	}
 
 	frequencyCounter.kanaUniqueCount = len(kanas)
@@ -205,14 +265,6 @@ func WithSearchDepth(depth int) Option {
 		return nil
 	}
 }
-
-// func WithContext() Option {
-// 	return func(opts *scraperOptions) error {
-// 		opts.loggingMode = true
-// 		log.Println("logging mode is set")
-// 		return nil
-// 	}
-// }
 
 func WithLogging() Option {
 	return func(opts *scraperOptions) error {
