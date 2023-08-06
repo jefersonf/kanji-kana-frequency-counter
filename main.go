@@ -66,7 +66,7 @@ func main() {
 	mostCommomKatakana := getMostCommonCharactersList(res.katakanas)
 	mostCommomHiragana := getMostCommonCharactersList(res.hiraganas)
 
-	fmt.Println("All Japonese characters found:", res.allCharacteresCount)
+	fmt.Println("All Japanese characters found:", res.allCharacteresCount)
 	fmt.Println("Kanji unique count:", res.kanjiUniqueCount)
 
 	if res.kanjiUniqueCount > 0 {
