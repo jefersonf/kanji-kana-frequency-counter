@@ -1,5 +1,8 @@
 # kanji-kana-frequency-counter
-Scraping tool of the most common kanji and kana characters on a website
+
+Scraper tool!
+
+Find the most common kanji and kana characters on a website.
 
 # Usage
 
