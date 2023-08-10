@@ -69,7 +69,7 @@ func main() {
 	fmt.Println("All Japanese characters found:", res.allCharacteresCount)
 	fmt.Println("Kanji unique count:", res.kanjiUniqueCount)
 
-	kanjiRankingSize := Min(res.kanjiUniqueCount, rankingSize)
+	kanjiRankingSize := min(res.kanjiUniqueCount, rankingSize)
 	if res.kanjiUniqueCount > 0 {
 		fmt.Println(kanjiRankingSize, "most common Kanji characters:")
 		printCharactersRanking(res.kanjis, mostCommomKanjis, kanjiRankingSize)
@@ -79,13 +79,13 @@ func main() {
 	fmt.Println("Katakana unique count:", res.katakanaUniqueCount)
 	fmt.Println("Hiragana unique count:", res.hiraganaUniqueCount)
 
-	katakanaRankingSize := Min(res.katakanaUniqueCount, rankingSize)
+	katakanaRankingSize := min(res.katakanaUniqueCount, rankingSize)
 	if res.katakanaUniqueCount > 0 {
 		fmt.Println(katakanaRankingSize, "most common Katakana characters:")
 		printCharactersRanking(res.katakanas, mostCommomKatakana, katakanaRankingSize)
 	}
 
-	hiraganaRankingSize := Min(res.hiraganaUniqueCount, rankingSize)
+	hiraganaRankingSize := min(res.hiraganaUniqueCount, rankingSize)
 	if res.hiraganaUniqueCount > 0 {
 		fmt.Println(hiraganaRankingSize, "most common Hiragana characters:")
 		printCharactersRanking(res.hiraganas, mostCommomHiragana, hiraganaRankingSize)
@@ -99,7 +99,7 @@ func printCharactersRanking(m map[string]int, rankingList []string, rankingSize 
 	if len(rankingList) < minRankingSize {
 		minRankingSize = len(rankingList)
 	}
-	cols := Max(5, int(math.Sqrt(float64(minRankingSize))))
+	cols := max(5, int(math.Sqrt(float64(minRankingSize))))
 
 	for i := 0; i < minRankingSize; i++ {
 		if i > 0 && i%cols == 0 {
@@ -280,18 +280,4 @@ func WithLogging() Option {
 func validURL(url string) bool {
 	// TODO weak test and needs to be improved
 	return strings.HasPrefix(url, "http") && strings.Count(url, "://www.") == 1
-}
-
-func Min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func Max(a, b int) int {
-	if a < b {
-		return b
-	}
-	return a
 }
