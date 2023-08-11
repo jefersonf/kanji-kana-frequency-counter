@@ -132,14 +132,14 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("unable to fetching url. Err:", err)
+		fmt.Println("unable to fetching url.", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("unable to read body. Err:", err)
+		fmt.Println("unable to read body.", err)
 		return
 	}
 	text := string(body)
