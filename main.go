@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math"
 	"net/http"
 	"sort"
 	"strings"
@@ -99,13 +98,13 @@ func printCharactersRanking(m map[string]int, rankingList []string, rankingSize 
 	if len(rankingList) < minRankingSize {
 		minRankingSize = len(rankingList)
 	}
-	columns := max(5, int(math.Sqrt(float64(minRankingSize))))
-
 	for i := 0; i < minRankingSize; i++ {
-		if i > 0 && i%columns == 0 {
-			fmt.Println()
+		if kana.IsKana(rankingList[i]) {
+			romaji := kana.KanaToRomaji(rankingList[i])
+			fmt.Printf("%4d. %v %v (%v)\n", i+1, rankingList[i], romaji, m[rankingList[i]])
+		} else {
+			fmt.Printf("%4d. %v (%v)\n", i+1, rankingList[i], m[rankingList[i]])
 		}
-		fmt.Printf("%4d. %v (%v)\t", i+1, rankingList[i], m[rankingList[i]])
 	}
 	fmt.Println()
 }
