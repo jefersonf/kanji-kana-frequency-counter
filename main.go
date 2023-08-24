@@ -61,9 +61,9 @@ func main() {
 		log.Println(err)
 	}
 
-	mostcommonKanjis := getMostCommonCharactersList(res.kanjis)
-	mostcommonKatakana := getMostCommonCharactersList(res.katakanas)
-	mostcommonHiragana := getMostCommonCharactersList(res.hiraganas)
+	mostCommonKanjis := getMostCommonCharactersList(res.kanjis)
+	mostCommonKatakana := getMostCommonCharactersList(res.katakanas)
+	mostCommonHiragana := getMostCommonCharactersList(res.hiraganas)
 
 	fmt.Println("All Japanese characters found:", res.allCharacteresCount)
 	fmt.Println("Kanji unique count:", res.kanjiUniqueCount)
@@ -71,7 +71,7 @@ func main() {
 	kanjiRankingSize := min(res.kanjiUniqueCount, rankingSize)
 	if res.kanjiUniqueCount > 0 {
 		fmt.Println(kanjiRankingSize, "most common Kanji characters:")
-		printCharactersRanking(res.kanjis, mostcommonKanjis, kanjiRankingSize)
+		printCharactersRanking(res.kanjis, mostCommonKanjis, kanjiRankingSize)
 	}
 
 	fmt.Println("Kana unique count:", res.kanaUniqueCount)
@@ -81,13 +81,13 @@ func main() {
 	katakanaRankingSize := min(res.katakanaUniqueCount, rankingSize)
 	if res.katakanaUniqueCount > 0 {
 		fmt.Println(katakanaRankingSize, "most common Katakana characters:")
-		printCharactersRanking(res.katakanas, mostcommonKatakana, katakanaRankingSize)
+		printCharactersRanking(res.katakanas, mostCommonKatakana, katakanaRankingSize)
 	}
 
 	hiraganaRankingSize := min(res.hiraganaUniqueCount, rankingSize)
 	if res.hiraganaUniqueCount > 0 {
 		fmt.Println(hiraganaRankingSize, "most common Hiragana characters:")
-		printCharactersRanking(res.hiraganas, mostcommonHiragana, hiraganaRankingSize)
+		printCharactersRanking(res.hiraganas, mostCommonHiragana, hiraganaRankingSize)
 	}
 
 	log.Printf("total time: %v\n", time.Since(startExecTime))
