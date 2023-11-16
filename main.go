@@ -146,15 +146,12 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 		c := string(r)
 		if kana.IsKanji(c) || kana.IsKatakana(c) || kana.IsHiragana(c) {
 			fc.allCharacteresCount += 1
-
 			if kana.IsKanji(c) {
 				fc.kanjis[c] += 1
 			}
-
 			if kana.IsKatakana(c) {
 				fc.katakanas[c] += 1
 			}
-
 			if kana.IsHiragana(c) {
 				fc.hiraganas[c] += 1
 			}
@@ -202,7 +199,7 @@ func newKanjiKanaScraper(rootURL string, options ...Option) (*kanjiKanaFrequency
 		}
 	}
 
-	if !validURL(rootURL) {
+	if !validateURL(rootURL) {
 		rootURL = defaultURL
 		if opts.loggingMode {
 			log.Println("invalid URL, setting to default URL=", rootURL)
@@ -276,7 +273,7 @@ func WithLogging() Option {
 	}
 }
 
-func validURL(url string) bool {
+func validateURL(url string) bool {
 	// TODO weak test and needs to be improved
 	return strings.HasPrefix(url, "http") && strings.Count(url, "://www.") == 1
 }
