@@ -131,14 +131,14 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("unable to fetching url.", err)
+		fmt.Println("unable to fetch url", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("unable to read body.", err)
+		fmt.Println("fail to read body", err)
 		return
 	}
 	text := string(body)
@@ -202,7 +202,7 @@ func newKanjiKanaScraper(rootURL string, options ...Option) (*kanjiKanaFrequency
 	if !validateURL(rootURL) {
 		rootURL = defaultURL
 		if opts.loggingMode {
-			log.Println("invalid URL, setting to default URL=", rootURL)
+			log.Printf("invalid URL, setting to default URL: %s\n", rootURL)
 		}
 	}
 
@@ -214,7 +214,7 @@ func newKanjiKanaScraper(rootURL string, options ...Option) (*kanjiKanaFrequency
 	}
 
 	if opts.loggingMode {
-		log.Println("search depth set to", searchDepth)
+		log.Printf("search depth set to %v\n", searchDepth)
 	}
 
 	frequencyCounter := &kanjiKanaFrequencyCounter{
