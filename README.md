@@ -1,6 +1,6 @@
 # kanji-kana-frequency-counter
 
-Find the most common kanji and kana characters on a website using this scraping script.
+Listing the most common kanji and kana characters on a website using this scraping script.
 
 # Usage
 
