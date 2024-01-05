@@ -30,7 +30,7 @@ type scraperOptions struct {
 
 type Option func(*scraperOptions) error
 
-// kanjiKanaFrequencyCounter describes the counting of Kanji, kanas e horaganas
+// kanjiKanaFrequencyCounter describes the counting of Kanji, kanas e hiraganas.
 type kanjiKanaFrequencyCounter struct {
 	allCharacteresCount int
 	uniqueCount         int
