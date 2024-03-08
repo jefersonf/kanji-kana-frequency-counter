@@ -139,7 +139,7 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("fail to read body", err)
+		fmt.Println("fail to read response body", err)
 		return
 	}
 	text := string(body)
