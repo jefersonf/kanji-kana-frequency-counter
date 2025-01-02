@@ -91,7 +91,7 @@ func main() {
 		printCharactersRanking(res.hiraganas, mostCommonHiragana, hiraganaRankingSize)
 	}
 
-	log.Printf("total time: %v\n", time.Since(startExecTime))
+	log.Printf("total time: %v ms\n", time.Since(startExecTime))
 }
 
 func printCharactersRanking(m map[string]int, rankingList []string, rankingSize int) {
@@ -203,7 +203,7 @@ func newKanjiKanaScraper(rootURL string, options ...Option) (*kanjiKanaFrequency
 	if !validateURL(rootURL) {
 		rootURL = defaultURL
 		if opts.loggingMode {
-			log.Printf("invalid URL, setting to default URL: %s\n", rootURL)
+			log.Printf("invalid URL: setting to default URL: %s\n", rootURL)
 		}
 	}
 
@@ -275,6 +275,6 @@ func WithLogging() Option {
 }
 
 func validateURL(url string) bool {
-	// TODO weak test and needs to be improved
+	// TODO weak test that needs to be improved
 	return strings.HasPrefix(url, "http") && strings.Count(url, "://www.") == 1
 }
