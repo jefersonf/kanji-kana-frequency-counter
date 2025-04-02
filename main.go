@@ -125,7 +125,7 @@ func getMostCommonCharactersList(m map[string]int) []string {
 	return charactersList
 }
 
-func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, layer int) {
+func (counter *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, layer int) {
 	if layer < 0 {
 		return
 	}
@@ -146,15 +146,15 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 	for _, r := range text {
 		c := string(r)
 		if kana.IsKanji(c) || kana.IsKatakana(c) || kana.IsHiragana(c) {
-			fc.allCharacteresCount += 1
+			counter.allCharacteresCount += 1
 			if kana.IsKanji(c) {
-				fc.kanjis[c] += 1
+				counter.kanjis[c] += 1
 			}
 			if kana.IsKatakana(c) {
-				fc.katakanas[c] += 1
+				counter.katakanas[c] += 1
 			}
 			if kana.IsHiragana(c) {
-				fc.hiraganas[c] += 1
+				counter.hiraganas[c] += 1
 			}
 		}
 	}
@@ -186,7 +186,7 @@ func (fc *kanjiKanaFrequencyCounter) routine(ctx context.Context, url string, la
 	}
 
 	for nextURL := range links {
-		fc.routine(ctx, nextURL, layer-1)
+		counter.routine(ctx, nextURL, layer-1)
 	}
 }
 
